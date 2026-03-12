@@ -1,0 +1,111 @@
+---- TABLE: BB_MEMBERS
+--CREATE TABLE BB_MEMBERS (
+--  MEMBER_ID NUMBER(6) CONSTRAINT bbmm_id_pk PRIMARY KEY,
+--  FIRST_NAME VARCHAR2(20) NOT NULL,
+--  LAST_NAME VARCHAR2(30) NOT NULL,
+--  ADDRESS VARCHAR2(50),
+--  SSN VARCHAR2(11) CONSTRAINT bbmm_ssn_unq UNIQUE NOT NULL
+--);
+--
+---- COMMENTS BB_MEMBERS
+--COMMENT ON TABLE BB_MEMBERS IS 'Contains information about all members registered in the Blockbuster system';
+--
+--COMMENT ON COLUMN BB_MEMBERS.MEMBER_ID IS 'Unique identifier for each member (Primary Key)';
+--COMMENT ON COLUMN BB_MEMBERS.FIRST_NAME IS 'First name of the member';
+--COMMENT ON COLUMN BB_MEMBERS.LAST_NAME IS 'Last name of the member';
+--COMMENT ON COLUMN BB_MEMBERS.ADDRESS IS 'Residential address of the member';
+--COMMENT ON COLUMN BB_MEMBERS.SSN IS 'Unique Social Security Number of the member';
+
+---- TABLE: BB_DIRECTOR
+--CREATE TABLE BB_DIRECTOR (
+--  DIRECTOR_ID NUMBER(5) CONSTRAINT bbd_id_pk PRIMARY KEY,
+--  DIRECTOR_NAME VARCHAR2(20) NOT NULL
+--);
+--
+---- COMMENTS BB_DIRECTOR
+--COMMENT ON TABLE BB_DIRECTOR IS 'Stores information about movie directors associated with Blockbuster productions';
+--
+--COMMENT ON COLUMN BB_DIRECTOR.DIRECTOR_ID IS 'Unique identifier for each director (Primary Key)';
+--COMMENT ON COLUMN BB_DIRECTOR.DIRECTOR_NAME IS 'Full name of the director';
+
+---- TABLE: BB_PRODHOUSE
+--CREATE TABLE BB_PRODHOUSE (
+--  PRODHOUSE_ID NUMBER(5) CONSTRAINT bbph_id_pk PRIMARY KEY,
+--  PRODHOUSE_NAME VARCHAR2(30) NOT NULL
+--);
+--
+---- COMMENTS BB_PRODHOUSE
+--COMMENT ON TABLE BB_PRODHOUSE IS 'Stores information about production houses responsible for producing movies in the Blockbuster system';
+--
+--COMMENT ON COLUMN BB_PRODHOUSE.PRODHOUSE_ID IS 'Unique identifier for each production house (Primary Key)';
+--COMMENT ON COLUMN BB_PRODHOUSE.PRODHOUSE_NAME IS 'Name of the production house';
+
+
+---- TABLE: BB_MOVIES
+--CREATE TABLE BB_MOVIES (
+--  MOVIE_ID VARCHAR2(6) CONSTRAINT bbm_id_pk PRIMARY KEY,
+--  TITLE VARCHAR2(40) NOT NULL,
+--  PRODHOUSE_ID NUMBER(5),
+--  DIRECTOR_ID NUMBER(5),
+--  PRICE NUMBER(9,2),
+--
+--  CONSTRAINT bbm_phid_fk FOREIGN KEY (PRODHOUSE_ID)
+--    REFERENCES BB_PRODHOUSE (PRODHOUSE_ID),
+--
+--  CONSTRAINT bbm_did_fk FOREIGN KEY (DIRECTOR_ID)
+--    REFERENCES BB_DIRECTOR (DIRECTOR_ID)
+--);
+--
+---- COMMENTS BB_MOVIES
+--COMMENT ON TABLE BB_MOVIES IS 'Stores details of all movies available in the Blockbuster system, linked with their directors and production houses';
+--
+--COMMENT ON COLUMN BB_MOVIES.MOVIE_ID IS 'Unique identifier for each movie (Primary Key)';
+--COMMENT ON COLUMN BB_MOVIES.TITLE IS 'Title or name of the movie';
+--COMMENT ON COLUMN BB_MOVIES.PRODHOUSE_ID IS 'References the production house that produced the movie (Foreign Key)';
+--COMMENT ON COLUMN BB_MOVIES.DIRECTOR_ID IS 'References the director responsible for the movie (Foreign Key)';
+--COMMENT ON COLUMN BB_MOVIES.PRICE IS 'Price or rental cost associated with the movie';
+
+---- TABLE: BB_MOVIE_COPIES
+--CREATE TABLE BB_MOVIE_COPIES (
+--  COPY_ID VARCHAR2(6),
+--  MOVIE_ID VARCHAR2(6),
+--  STATUS VARCHAR2(15),
+--
+--  CONSTRAINT bbmc_cmid_pk PRIMARY KEY (COPY_ID, MOVIE_ID),
+--  CONSTRAINT bbmc_mid_fk FOREIGN KEY (MOVIE_ID) REFERENCES BB_MOVIES(MOVIE_ID)
+--);
+--
+----COMMENTS BB_MOVIE_COPIES
+--COMMENT ON TABLE BB_MOVIE_COPIES IS 'Stores individual copies of movies available for rental, linked to the main movie details';
+--
+--COMMENT ON COLUMN BB_MOVIE_COPIES.COPY_ID IS 'Unique identifier for each copy of a movie';
+--COMMENT ON COLUMN BB_MOVIE_COPIES.MOVIE_ID IS 'References the movie to which this copy belongs (Foreign Key)';
+--COMMENT ON COLUMN BB_MOVIE_COPIES.STATUS IS 'Current status of the copy (e.g., Available, Rented, Damaged)';
+
+---- TABLE: BB_TRANSACTIONS
+--CREATE TABLE BB_TRANSACTIONS (
+--  TRANSACTION_ID VARCHAR2(6),
+--  COPY_ID VARCHAR2(6),
+--  MOVIE_ID VARCHAR2(6),
+--  MEMBERID NUMBER(6),
+--  RENTED_DATE DATE,
+--  RETURNED_DATE DATE,
+--  STATUS VARCHAR2(20),
+--
+--  CONSTRAINT bbt_id_pk PRIMARY KEY (TRANSACTION_ID),
+--  CONSTRAINT bbt_cidmid_fk FOREIGN KEY (COPY_ID, MOVIE_ID)
+--    REFERENCES BB_MOVIE_COPIES (COPY_ID, MOVIE_ID),
+--  CONSTRAINT bbt_mmid_fk FOREIGN KEY (MEMBERID)
+--    REFERENCES BB_MEMBERS (MEMBER_ID)
+--);
+--
+---- COMMENTS BB_TRANSACTIONS
+--COMMENT ON TABLE BB_TRANSACTIONS IS 'Stores rental transactions for movies, linking members to movie copies and tracking rental status';
+--
+--COMMENT ON COLUMN BB_TRANSACTIONS.TRANSACTION_ID IS 'Unique identifier for each transaction (Primary Key)';
+--COMMENT ON COLUMN BB_TRANSACTIONS.COPY_ID IS 'References the specific copy of the movie being rented (part of Foreign Key)';
+--COMMENT ON COLUMN BB_TRANSACTIONS.MOVIE_ID IS 'References the movie for the rented copy (part of Foreign Key)';
+--COMMENT ON COLUMN BB_TRANSACTIONS.MEMBERID IS 'References the member who rented the movie (Foreign Key)';
+--COMMENT ON COLUMN BB_TRANSACTIONS.RENTED_DATE IS 'Date when the movie copy was rented';
+--COMMENT ON COLUMN BB_TRANSACTIONS.RETURNED_DATE IS 'Date when the movie copy was returned';
+--COMMENT ON COLUMN BB_TRANSACTIONS.STATUS IS 'Current status of the transaction (e.g., Rented, Returned, Late)';
